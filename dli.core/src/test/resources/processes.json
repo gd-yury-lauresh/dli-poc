@@ -1,0 +1,64 @@
+{
+  "processes" : [
+    {
+      "name" : "CategoryBrowse",
+      "timeout" : 60,
+      "trigger" : "User category browse",
+      "states" : ["START","CATEGORY_VIEW", "PRODUCT_VIEW", "CART_ADDED","CART_CHECKOUT","END"],
+      "start_state" : "START",
+      "end_state" : "END",
+      "rules" : [
+        {
+          "state_from" : ["START", "PRODUCT_VIEW","CART_ADDED"],
+          "state_to" : "CATEGORY_VIEW",
+          "trigger" : "User category browse"
+        },
+        {
+          "state_from" : ["CATEGORY_VIEW","CART_ADDED"],
+          "state_to" : "PRODUCT_VIEW",
+          "trigger" : "User product browse"
+        },
+        {
+          "state_from" : ["PRODUCT_VIEW"],
+          "state_to" : "CART_ADDED",
+          "trigger" : "User product added to cart"
+        },
+        {
+          "state_from" : ["CART_ADDED"],
+          "state_to" : "CART_CHECKOUT",
+          "trigger" : "User checkout started"
+        },
+        {
+          "state_from" : ["CART_CHECKOUT"],
+          "state_to" : "END",
+          "trigger" : "User checkout done"
+        }
+      ]
+    },
+    {
+      "name" : "CheckoutProcess",
+      "timeout" : 60,
+      "trigger" : "User checkout started",
+      "states" : ["CART_CHECKOUT", "ADDRESS_ENTERED", "PAID", "DONE"],
+      "start_state" : "CART_CHECKOUT",
+      "end_state" : "DONE",
+      "rules" : [
+        {
+          "state_from" : ["CART_CHECKOUT"],
+          "state_to" : "ADDRESS_ENTERED",
+          "trigger" : "User entered address"
+        },
+        {
+          "state_from" : ["ADDRESS_ENTERED"],
+          "state_to" : "PAID",
+          "trigger" : "User paid"
+        },
+        {
+          "state_from" : ["PAID"],
+          "state_to" : "DONE",
+          "trigger" : "User checkout done"
+        }
+      ]
+    }
+  ]
+}

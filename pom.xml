@@ -18,7 +18,7 @@ http://maven.apache.org/developers/conventions/code.html#POM_Code_Convention
 
     <modules>
         <module>dli.provider</module>
-        <module>dli.jbpm</module>
+        <module>dli.core</module>
     </modules>
 
     <properties>
@@ -34,8 +34,8 @@ http://maven.apache.org/developers/conventions/code.html#POM_Code_Convention
         <findbugs.version>3.0.1</findbugs.version>
         <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
         <compiler.plugin.version>3.3</compiler.plugin.version>
-        <hds.encryption.version>${project.version}</hds.encryption.version>
-        <hds.keys.version>${project.version}</hds.keys.version>
+        <dli.provider.version>${project.version}</dli.provider.version>
+        <dli.core.version>${project.version}</dli.core.version>
     </properties>
 
     <dependencies>
