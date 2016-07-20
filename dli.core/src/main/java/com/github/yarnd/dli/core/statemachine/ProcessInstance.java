@@ -28,6 +28,7 @@ public class ProcessInstance {
             String newState;
 
             if ((newState = transitionRule.checkTransition(logItem, this.currentState)) != null) {
+                logger.debug("Process {} moved from {} to {} for sessionId {}", processDefinition.getProcessName(), currentState, newState, logItem.getSessionId());
                 this.moveToState(newState);
                 transitionTriggered = true;
             }
@@ -38,7 +39,6 @@ public class ProcessInstance {
 
     private void moveToState(String newState) {
         if (processDefinition.getStates().contains(newState)) {
-            logger.debug("Process {} moved from {} to {}", processDefinition.getProcessName(), currentState, newState);
             currentState = newState;
         } else {
             logger.error("State {} is invalid for process {}, rejected", newState, processDefinition.getProcessName());

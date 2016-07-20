@@ -19,6 +19,7 @@ http://maven.apache.org/developers/conventions/code.html#POM_Code_Convention
     <modules>
         <module>dli.provider</module>
         <module>dli.core</module>
+        <module>dli.runner</module>
     </modules>
 
     <properties>
@@ -36,6 +37,7 @@ http://maven.apache.org/developers/conventions/code.html#POM_Code_Convention
         <compiler.plugin.version>3.3</compiler.plugin.version>
         <dli.provider.version>${project.version}</dli.provider.version>
         <dli.core.version>${project.version}</dli.core.version>
+        <dli.runner.version>${project.version}</dli.runner.version>
     </properties>
 
     <dependencies>

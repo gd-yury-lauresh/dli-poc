@@ -5,10 +5,7 @@ import com.github.yarnd.dli.core.statemachine.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ProcessOrchestrator {
 
@@ -51,25 +48,32 @@ public class ProcessOrchestrator {
         for (ProcessDefinition processDefinition : processDefinitions.values()) {
             // if process is not started for this session, but need to be started
             if (!instanceNamesForSessionId.contains(processDefinition.getProcessName()) && processDefinition.isTriggered(logItem)) {
+                logger.debug("Fork process {} on log message {} for sessionId {}",processDefinition.getProcessName(), logItem.getMessage(), logItem.getSessionId());
                 ProcessInstance newProcessInstance = processDefinition.forkInstance(logItem);
                 sessionInstances.put(processDefinition.getProcessName(), newProcessInstance);
             }
         }
 
-        // Send signals
-        for (ProcessInstance processInstance : sessionInstances.values()) {
+
+        Iterator<Map.Entry<String,ProcessInstance>> sessionInstancesIterator = sessionInstances.entrySet().iterator();
+
+        while (sessionInstancesIterator.hasNext()) {
+            ProcessInstance processInstance = sessionInstancesIterator.next().getValue();
+            String processName = processInstance.getProcessDefinition().getProcessName();
+
             processInstance.processLogItem(logItem);
 
             if (processInstance.isFinished()) {
-                logger.debug("Process instance name {}, sessionId {} finished work with state {}", processInstance.getProcessDefinition().getProcessName(), processInstance.getSessionId(), processInstance.getCurrentState());
-                sessionInstances.remove(processInstance.getProcessDefinition().getProcessName());
+                logger.debug("Process instance name {}, sessionId {} finished work with state {}", processName, processInstance.getSessionId(), processInstance.getCurrentState());
+                sessionInstancesIterator.remove();
                 continue;
             }
 
             if (processInstance.isTimedOut()) {
-                logger.debug("Process instance name {}, sessionId {} TIMED OUT with state {}", processInstance.getProcessDefinition().getProcessName(), processInstance.getSessionId(), processInstance.getCurrentState());
-                sessionInstances.remove(processInstance.getProcessDefinition().getProcessName());
+                logger.debug("Process instance name {}, sessionId {} TIMED OUT with state {}", processName, processInstance.getSessionId(), processInstance.getCurrentState());
+                sessionInstancesIterator.remove();
             }
+
         }
 
         // remove empty sessions
